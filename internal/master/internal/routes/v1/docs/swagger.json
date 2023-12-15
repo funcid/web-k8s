@@ -1,0 +1,461 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "WebK8S API v1",
+        "contact": {},
+        "version": "1.0"
+    },
+    "basePath": "/v1",
+    "paths": {
+        "/v1/deployment": {
+            "post": {
+                "description": "Creates k8s deployment",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "deployments"
+                ],
+                "summary": "Create deployment",
+                "parameters": [
+                    {
+                        "description": "the request",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/deployment.CreateDeploymentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/deployment.CreateDeploymentReply"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Deletes k8s deployment",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "deployments"
+                ],
+                "summary": "Delete deployment",
+                "parameters": [
+                    {
+                        "description": "the request",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/deployment.DeleteDeploymentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/deployment.DeleteDeploymentReply"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/node": {
+            "post": {
+                "description": "Update (or create) a node",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "nodes"
+                ],
+                "summary": "Update node",
+                "parameters": [
+                    {
+                        "description": "the request",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/node.UpdateNodeRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/node.UpdateNodeReply"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/node/batch": {
+            "get": {
+                "description": "Get a list of all nodes",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "nodes"
+                ],
+                "summary": "Get nodes",
+                "parameters": [
+                    {
+                        "description": "the request",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/batch.GetBatchRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/batch.GetBatchReply"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/pods": {
+            "get": {
+                "description": "Get list of pods",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "pods"
+                ],
+                "summary": "Get pods",
+                "parameters": [
+                    {
+                        "description": "the request",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/pods.GetPodsRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/pods.GetPodsReply"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "batch.GetBatchReply": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                },
+                "nodes": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/complex.Node"
+                    }
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "batch.GetBatchRequest": {
+            "type": "object"
+        },
+        "complex.Node": {
+            "type": "object",
+            "properties": {
+                "cpu": {
+                    "$ref": "#/definitions/resources.CPU"
+                },
+                "disk_free": {
+                    "type": "integer"
+                },
+                "gpus": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/resources.GPU"
+                    }
+                },
+                "memory": {
+                    "type": "integer"
+                },
+                "uptime": {
+                    "type": "integer"
+                }
+            }
+        },
+        "complex.Pod": {
+            "type": "object",
+            "properties": {
+                "images": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "node": {
+                    "type": "string"
+                }
+            }
+        },
+        "deployment.CreateDeploymentReply": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                },
+                "uuid": {
+                    "type": "string"
+                }
+            }
+        },
+        "deployment.CreateDeploymentRequest": {
+            "type": "object",
+            "properties": {
+                "labels": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "matchLabels": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "namespace": {
+                    "type": "string"
+                },
+                "pod": {
+                    "$ref": "#/definitions/deployment.PodCreateRequest"
+                },
+                "replicas": {
+                    "type": "integer"
+                },
+                "strategy": {
+                    "$ref": "#/definitions/v1.DeploymentStrategyType"
+                }
+            }
+        },
+        "deployment.DeleteDeploymentReply": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "deployment.DeleteDeploymentRequest": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "namespace": {
+                    "type": "string"
+                }
+            }
+        },
+        "deployment.PodCreateRequest": {
+            "type": "object",
+            "properties": {
+                "containers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/deployment.PodCreateRequestContainer"
+                    }
+                },
+                "labels": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "namespace": {
+                    "type": "string"
+                },
+                "restartPolicy": {
+                    "$ref": "#/definitions/v1.RestartPolicy"
+                }
+            }
+        },
+        "deployment.PodCreateRequestContainer": {
+            "type": "object",
+            "properties": {
+                "args": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "command": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "image": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "ports": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/deployment.PodCreateRequestContainersPort"
+                    }
+                }
+            }
+        },
+        "deployment.PodCreateRequestContainersPort": {
+            "type": "object",
+            "properties": {
+                "containerPort": {
+                    "type": "integer"
+                }
+            }
+        },
+        "node.UpdateNodeReply": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "node.UpdateNodeRequest": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "example": "sakura"
+                },
+                "node": {
+                    "$ref": "#/definitions/complex.Node"
+                }
+            }
+        },
+        "pods.GetPodsReply": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                },
+                "pods": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/complex.Pod"
+                    }
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "pods.GetPodsRequest": {
+            "type": "object"
+        },
+        "resources.CPU": {
+            "type": "object",
+            "properties": {
+                "cores": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "resources.GPU": {
+            "type": "object",
+            "properties": {
+                "cores": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.DeploymentStrategyType": {
+            "type": "string",
+            "enum": [
+                "Recreate",
+                "RollingUpdate"
+            ],
+            "x-enum-varnames": [
+                "RecreateDeploymentStrategyType",
+                "RollingUpdateDeploymentStrategyType"
+            ]
+        },
+        "v1.RestartPolicy": {
+            "type": "string",
+            "enum": [
+                "Always",
+                "OnFailure",
+                "Never"
+            ],
+            "x-enum-varnames": [
+                "RestartPolicyAlways",
+                "RestartPolicyOnFailure",
+                "RestartPolicyNever"
+            ]
+        }
+    }
+}

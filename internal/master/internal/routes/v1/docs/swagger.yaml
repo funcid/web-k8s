@@ -1,0 +1,301 @@
+basePath: /v1
+definitions:
+  batch.GetBatchReply:
+    properties:
+      error:
+        type: string
+      nodes:
+        additionalProperties:
+          $ref: '#/definitions/complex.Node'
+        type: object
+      success:
+        type: boolean
+    type: object
+  batch.GetBatchRequest:
+    type: object
+  complex.Node:
+    properties:
+      cpu:
+        $ref: '#/definitions/resources.CPU'
+      disk_free:
+        type: integer
+      gpus:
+        items:
+          $ref: '#/definitions/resources.GPU'
+        type: array
+      memory:
+        type: integer
+      uptime:
+        type: integer
+    type: object
+  complex.Pod:
+    properties:
+      images:
+        items:
+          type: string
+        type: array
+      name:
+        type: string
+      node:
+        type: string
+    type: object
+  deployment.CreateDeploymentReply:
+    properties:
+      error:
+        type: string
+      success:
+        type: boolean
+      uuid:
+        type: string
+    type: object
+  deployment.CreateDeploymentRequest:
+    properties:
+      labels:
+        additionalProperties:
+          type: string
+        type: object
+      matchLabels:
+        additionalProperties:
+          type: string
+        type: object
+      name:
+        type: string
+      namespace:
+        type: string
+      pod:
+        $ref: '#/definitions/deployment.PodCreateRequest'
+      replicas:
+        type: integer
+      strategy:
+        $ref: '#/definitions/v1.DeploymentStrategyType'
+    type: object
+  deployment.DeleteDeploymentReply:
+    properties:
+      error:
+        type: string
+      success:
+        type: boolean
+    type: object
+  deployment.DeleteDeploymentRequest:
+    properties:
+      name:
+        type: string
+      namespace:
+        type: string
+    type: object
+  deployment.PodCreateRequest:
+    properties:
+      containers:
+        items:
+          $ref: '#/definitions/deployment.PodCreateRequestContainer'
+        type: array
+      labels:
+        additionalProperties:
+          type: string
+        type: object
+      name:
+        type: string
+      namespace:
+        type: string
+      restartPolicy:
+        $ref: '#/definitions/v1.RestartPolicy'
+    type: object
+  deployment.PodCreateRequestContainer:
+    properties:
+      args:
+        items:
+          type: string
+        type: array
+      command:
+        items:
+          type: string
+        type: array
+      image:
+        type: string
+      name:
+        type: string
+      ports:
+        items:
+          $ref: '#/definitions/deployment.PodCreateRequestContainersPort'
+        type: array
+    type: object
+  deployment.PodCreateRequestContainersPort:
+    properties:
+      containerPort:
+        type: integer
+    type: object
+  node.UpdateNodeReply:
+    properties:
+      error:
+        type: string
+      success:
+        type: boolean
+    type: object
+  node.UpdateNodeRequest:
+    properties:
+      name:
+        example: sakura
+        type: string
+      node:
+        $ref: '#/definitions/complex.Node'
+    type: object
+  pods.GetPodsReply:
+    properties:
+      error:
+        type: string
+      pods:
+        items:
+          $ref: '#/definitions/complex.Pod'
+        type: array
+      success:
+        type: boolean
+    type: object
+  pods.GetPodsRequest:
+    type: object
+  resources.CPU:
+    properties:
+      cores:
+        type: integer
+      name:
+        type: string
+    type: object
+  resources.GPU:
+    properties:
+      cores:
+        type: integer
+      name:
+        type: string
+    type: object
+  v1.DeploymentStrategyType:
+    enum:
+    - Recreate
+    - RollingUpdate
+    type: string
+    x-enum-varnames:
+    - RecreateDeploymentStrategyType
+    - RollingUpdateDeploymentStrategyType
+  v1.RestartPolicy:
+    enum:
+    - Always
+    - OnFailure
+    - Never
+    type: string
+    x-enum-varnames:
+    - RestartPolicyAlways
+    - RestartPolicyOnFailure
+    - RestartPolicyNever
+info:
+  contact: {}
+  title: WebK8S API v1
+  version: "1.0"
+paths:
+  /v1/deployment:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes k8s deployment
+      parameters:
+      - description: the request
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/deployment.DeleteDeploymentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/deployment.DeleteDeploymentReply'
+      summary: Delete deployment
+      tags:
+      - deployments
+    post:
+      consumes:
+      - application/json
+      description: Creates k8s deployment
+      parameters:
+      - description: the request
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/deployment.CreateDeploymentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/deployment.CreateDeploymentReply'
+      summary: Create deployment
+      tags:
+      - deployments
+  /v1/node:
+    post:
+      consumes:
+      - application/json
+      description: Update (or create) a node
+      parameters:
+      - description: the request
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/node.UpdateNodeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/node.UpdateNodeReply'
+      summary: Update node
+      tags:
+      - nodes
+  /v1/node/batch:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of all nodes
+      parameters:
+      - description: the request
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/batch.GetBatchRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/batch.GetBatchReply'
+      summary: Get nodes
+      tags:
+      - nodes
+  /v1/pods:
+    get:
+      consumes:
+      - application/json
+      description: Get list of pods
+      parameters:
+      - description: the request
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/pods.GetPodsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/pods.GetPodsReply'
+      summary: Get pods
+      tags:
+      - pods
+swagger: "2.0"

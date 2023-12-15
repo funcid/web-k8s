@@ -1,0 +1,28 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: &name webk8s-master
+  labels:
+    app: webk8s
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: *name
+  template:
+    metadata:
+      name: *name
+      labels:
+        app: *name
+    spec:
+      containers:
+        - name: *name
+          image: null:null # MASTER IMAGE
+          securityContext:
+            runAsNonRoot: true
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ "ALL" ]
+      serviceAccountName: webk8s-master

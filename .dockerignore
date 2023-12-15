@@ -1,0 +1,42 @@
+.git/
+**/*
+!**/*/
+
+!**/.git*
+!**/.tokei*
+!**/.docker*
+!**/README.md
+
+!go.mod
+!go.sum
+!LICENSE
+!Dockerfile
+
+!**/*.go
+
+**/.idea/**/*
+
+# From deployment/.gitignore
+!deployment/**/*.yml
+
+# From internal/master/internal/routes/.gitignore
+!internal/master/internal/routes/**/**/docs/**/*
+
+# From pkg/front/.gitignore
+pkg/front/**/node_modules/
+
+!pkg/front/tsconfig*.json
+!pkg/front/package.json
+!pkg/front/pnpm-lock.yaml
+
+!pkg/front/index.html
+!pkg/front/vite.config.ts
+
+!pkg/front/src/*.ts
+!pkg/front/src/*.tsx
+!pkg/front/src/*.css
+
+# From pkg/sysinfo/cmd/nvml/.gitignore
+!pkg/sysinfo/cmd/nvml/**/*.c
+!pkg/sysinfo/cmd/nvml/**/*.h
+

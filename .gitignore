@@ -1,0 +1,16 @@
+*
+!*/
+
+!.git*
+!.tokei*
+!.docker*
+!README.md
+
+!/go.mod
+!/go.sum
+!/LICENSE
+!/Dockerfile
+
+!*.go
+
+.idea/**/*

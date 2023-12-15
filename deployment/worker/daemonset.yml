@@ -1,0 +1,35 @@
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: &name webk8s-worker
+  labels:
+    app: webk8s
+spec:
+  selector:
+    matchLabels:
+      app: *name
+  template:
+    metadata:
+      name: *name
+      labels:
+        app: *name
+    spec:
+      containers:
+        - name: *name
+          image: null:null # WORKER IMAGE
+          env:
+            - name: WEBK8S_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          volumeMounts:
+            - mountPath: /host
+              name: host-root
+              readOnly: true
+          securityContext:
+            privileged: true
+      volumes:
+        - name: host-root
+          hostPath:
+            path: /
