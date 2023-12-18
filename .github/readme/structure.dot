@@ -1,0 +1,50 @@
+digraph WebK8S {
+	splines = ortho
+
+	subgraph cluster_k8s {
+		label = "Kubernetes Cluster"
+
+		subgraph cluster_worker_daemonset {
+  		label = "worker DaemonSet"
+
+  		subgraph cluster_worker_node_dc01 {
+  			label = "node dc01"
+
+  			dc01_worker [label="worker"]
+  		}
+
+  		subgraph cluster_worker_node_dc02 {
+  			label = "node dc02"
+
+  			dc02_worker [label="worker"]
+  		}
+
+  		subgraph cluster_worker_node_dc03 {
+  			label = "node dc03"
+
+  			dc03_worker [label="worker"]
+  		}
+  	}
+
+  	subgraph cluster_master_deployment {
+  		label = "master Deployment"
+
+  		subgraph cluster_master_node_dc01 {
+  			label = "node dc01"
+
+  			dc01_master [label="master"]
+  		}
+  	}
+
+		kubeapi [label="Kubernetes API" shape=box]
+
+		dc01_master -> kubeapi
+  	{dc01_worker dc02_worker dc03_worker} -> dc01_master
+
+  	ingress [label="Ingress" shape=box]
+  	ingress -> dc01_master [dir=both]
+	}
+
+	user [label="User" shape=circle]
+	user -> ingress [dir=both]
+}
