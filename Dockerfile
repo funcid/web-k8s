@@ -21,7 +21,7 @@ RUN set -euo pipefail ;\
   mkdir ./bin ;\
 	cd ./webk8s ;\
 	for cmd in ./cmd/*; do \
-		CGO_ENABLED=0 go build -v -o ../bin "$cmd" ;\
+		CGO_ENABLED=0 go build -ldflags="-w -s" -v -o ../bin "$cmd" ;\
 	done;
 
 FROM docker.io/archlinux:base-devel AS nvml
