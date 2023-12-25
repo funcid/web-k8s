@@ -160,6 +160,8 @@ jobs:
             ${{ steps.make_images_tags.outputs.ver-master }}
           labels: ${{ steps.prepare_image_meta.outputs.labels }}
           annotations: ${{ steps.prepare_image_meta.outputs.annotations }}
+          build-args: |
+            VERSION=${{ steps.generate_new_version.outputs.version }}
       - name: Build and push worker Docker image
         uses: docker/build-push-action@v5
         with:
@@ -170,6 +172,8 @@ jobs:
             ${{ steps.make_images_tags.outputs.ver-worker }}
           labels: ${{ steps.prepare_image_meta.outputs.labels }}
           annotations: ${{ steps.prepare_image_meta.outputs.annotations }}
+          build-args: |
+            VERSION=${{ steps.generate_new_version.outputs.version }}
       - name: Export Docker images to tarballs
         run: |
           mkdir ./artifacts

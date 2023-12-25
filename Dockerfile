@@ -9,6 +9,7 @@ COPY ./pkg/front ./
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm run build
 
 FROM docker.io/golang:1.21-alpine3.18 AS builder
+ARG VERSION=0.0.0
 
 WORKDIR /work
 
@@ -21,7 +22,9 @@ RUN set -euo pipefail ;\
   mkdir ./bin ;\
 	cd ./webk8s ;\
 	for cmd in ./cmd/*; do \
-		CGO_ENABLED=0 go build -ldflags="-w -s" -v -o ../bin "$cmd" ;\
+		CGO_ENABLED=0 go build \
+    	-ldflags="-w -s -X 'github.com/funcid/web-k8s/internal/version.version=$VERSION'" \
+    	-v -o ../bin "$cmd" ;\
 	done;
 
 FROM docker.io/archlinux:base-devel AS nvml
