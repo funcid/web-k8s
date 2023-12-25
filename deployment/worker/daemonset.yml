@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: *name
-          image: null:null # WORKER IMAGE
+          image: ghcr.io/funcid/web-k8s:0.1.0-worker # WORKER IMAGE
           env:
             - name: WEBK8S_NODE_NAME
               valueFrom:

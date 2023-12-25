@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: *name
-          image: null:null # MASTER IMAGE
+          image: ghcr.io/funcid/web-k8s:0.1.0-master # MASTER IMAGE
           securityContext:
             runAsNonRoot: true
             readOnlyRootFilesystem: true
