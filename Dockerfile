@@ -17,8 +17,8 @@ COPY go.mod go.sum ./webk8s/
 RUN cd ./webk8s && go mod download
 
 COPY . ./webk8s/
-COPY --from=front /app/dist ./webk8s/pkg/front/dist
-RUN set -euo pipefail ;\
+RUN --mount=type=bind,from=front,source=/app/dist,target=./webk8s/pkg/front/dist \
+	set -euo pipefail ;\
   mkdir ./bin ;\
 	cd ./webk8s ;\
 	for cmd in ./cmd/*; do \
