@@ -4,9 +4,9 @@ ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 WORKDIR /app
 COPY ./pkg/front/package.json ./pkg/front/pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 COPY ./pkg/front ./
-RUN pnpm run build
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm run build
 
 FROM docker.io/golang:1.21-alpine3.18 AS builder
 
